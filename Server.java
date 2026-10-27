@@ -217,13 +217,18 @@ public class Server extends Thread {
     }
     public static void  getHwid(){
         String tempArr = "";
-
-        for (String c : playHashMap.keySet()) {
+        int i = 0;
+        for (String c : playerHwid) {
+            if (c == null) {
+                continue;
+            }
             if (tempArr.length() == 0) {
                 tempArr += c;
             }else{
                 tempArr += (","+c);
             }
+            tempArr += ";"+playerNames[i]+";"+playerTanks[i];
+            i++;
         }
         
         synchronized (clients) {
@@ -256,6 +261,29 @@ public class Server extends Thread {
         }
         playerTanks[i] = TankNum;
         System.out.println(playerNames[i]+":"+TankNum);
+        getAllPlayerData();
+    }
+
+    public static void LeaveGame(String hwid){
+        int i = 0;
+        for(String player : playerHwid){
+            if (hwid.equalsIgnoreCase(player)) {
+                break;
+            }
+            i++;
+        }
+        playHashMap.remove(hwid);
+        for (int j = i; j < lastIndex - 1; j++) {
+            playerHwid[j] = playerHwid[j+1];
+            playerNames[j] = playerNames[j+1];
+            playerTanks[j] = playerTanks[j+1];
+        }
+        lastIndex--;
+        playerHwid[lastIndex] = null;     
+        playerNames[lastIndex] = null;
+        playerTanks[lastIndex] = 0;
+
+ 
         getAllPlayerData();
     }
 

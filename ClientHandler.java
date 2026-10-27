@@ -69,7 +69,7 @@ public class ClientHandler extends Thread{
                             lastIndex++;
                             Server.setLastIndex(lastIndex);
                             Server.setServerStatus(ServerConfig.GameStatus_lobby);
-
+                            System.out.println(Server.getServerStatus());
                             //Server.getAllPlayerData();
                         }
                         
@@ -85,10 +85,11 @@ public class ClientHandler extends Thread{
                             String[] rows = data.split(",");
                             Server.UpDatePlayerTank(Integer.parseInt(rows[0]) , rows[1]);
                         }else if (method.equalsIgnoreCase("GameStart")) {
-                            System.out.println("GameStartTo");
                             Server.sendAll("server:GameStartCreate", null);
                             Server.setServerStatus(ServerConfig.GameStatus_start);
                             Server.GameStart();
+                        }else if(method.equalsIgnoreCase("LeaveGame")){
+                            Server.LeaveGame(data);
                         }
                     }else if(Server.getServerStatus().equalsIgnoreCase(ServerConfig.GameStatus_start)){
                         if (method.equalsIgnoreCase("playerkill")) {
